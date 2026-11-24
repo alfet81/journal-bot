@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: journal-bot
+
+
+google-api:
+  app-name: journal-bot
+  user-id: alfet.adp@gmail.com
+  token-dir: /Users/alfet/GoogleApi/tokens
+  credentials-file: '/credentials.json'
+
+journal-bot:
+  schedule: 0 0/15 * * * ?
+  attachments-root-dir: /Users/alfet/Documents/adp
+  gmail-config:
+    atracker-query: "label:adp/atracker is:unread"
+    log-query: "label:adp/log is:unread"
+
+logging:
+  level:
+    root: ERROR

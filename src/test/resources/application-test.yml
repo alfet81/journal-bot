@@ -1,0 +1,10 @@
+journal-bot:
+  attachments-root-dir: /test
+  gmail-config:
+    atracker-query: "label:adp/atracker is:unread"
+    log-query: "label:adp/log is:unread"
+
+logging:
+  level:
+    root: ERROR
+    com.alfet.journalbot.*: DEBUG

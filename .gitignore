@@ -1,0 +1,25 @@
+.DS_Store
+src/.DS_Store
+src/main/.DS_Store
+src/test/.DS_Store
+
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+log
+**/src/main/resources/credentials.json
+**/src/main/resources/google-service-account.json

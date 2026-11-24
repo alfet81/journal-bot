@@ -1,0 +1,63 @@
+[versions]
+# Misc
+jsoupVersion = '1.23.2'
+javaJwtVersion = '4.6.2'
+
+# Google API
+googleApiClientVersion = '2.9.1'
+googleOauthClientVersion = '1.39.0'
+googleGmailApiVersion = 'v1-rev20260727-2.0.0'
+googleDocsApiVersion = 'v1-rev20260921-2.0.0'
+googleDriveApiVersion = 'v3-rev20260916-2.0.0'
+
+# Apache commons
+commonsIoVersion = '2.22.0'
+commonsCsvVersion = '1.14.1'
+commonsCollectionsVersion = '4.6.0'
+commonsLangVersion = '3.21.0'
+commonsTextVersion = '1.15.0'
+
+# Lombok & Mapstruct
+lombokVersion = '1.18.48'
+mapstructVersion = '1.6.3'
+lombokMapstructVersion = '0.2.0'
+
+# Tests
+mockitoVersion = '5.24.0'
+assertJVersion = '3.27.7'
+
+[libraries]
+
+# Google API
+google-api-client = { module = 'com.google.api-client:google-api-client', version.ref = 'googleApiClientVersion' }
+google-oauth-client = { module = 'com.google.oauth-client:google-oauth-client-jetty', version.ref = 'googleOauthClientVersion' }
+google-gmail-api = { module = 'com.google.apis:google-api-services-gmail', version.ref = 'googleGmailApiVersion' }
+google-docs-api = { module = 'com.google.apis:google-api-services-docs', version.ref = 'googleDocsApiVersion' }
+google-drive-api = { module = 'com.google.apis:google-api-services-drive', version.ref = 'googleDriveApiVersion' }
+
+# Apache
+commons-io = { module = 'commons-io:commons-io', version.ref = 'commonsIoVersion' }
+commons-csv = { module = 'org.apache.commons:commons-csv', version.ref = 'commonsCsvVersion' }
+commons-collections = { module = 'org.apache.commons:commons-collections4', version.ref = 'commonsCollectionsVersion' }
+commons-lang = { module = 'org.apache.commons:commons-lang3', version.ref = 'commonsLangVersion' }
+commons-text = { module = 'org.apache.commons:commons-text', version.ref = 'commonsTextVersion' }
+
+# Lombok & Mapstruct
+lombok = { module = 'org.projectlombok:lombok', version.ref = 'lombokVersion' }
+mapstruct = { module = 'org.mapstruct:mapstruct', version.ref = 'mapstructVersion' }
+mapstruct-processor = { module = 'org.mapstruct:mapstruct-processor', version.ref = 'mapstructVersion' }
+lombok-mapstruct = { module = 'org.projectlombok:lombok-mapstruct-binding', version.ref = 'lombokMapstructVersion' }
+
+# Misc
+jsoup = { module = 'org.jsoup:jsoup', version.ref = 'jsoupVersion' }
+java-jwt = { module = 'com.auth0:java-jwt', version.ref = 'javaJwtVersion' }
+
+# Unit tests
+mockito = { module = 'org.mockito:mockito-core', version.ref = "mockitoVersion" }
+mockito-junit = { module = 'org.mockito:mockito-junit-jupiter', version.ref = "mockitoVersion" }
+assertj = { module = 'org.assertj:assertj-core', version.ref = 'assertJVersion' }
+
+[bundles]
+google = ['google-api-client', 'google-oauth-client', 'google-gmail-api', 'google-docs-api', 'google-drive-api']
+apache = ['commons-io', 'commons-csv', 'commons-lang', 'commons-text', 'commons-collections']
+testing = ['mockito', 'mockito-junit', 'assertj']

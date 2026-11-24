@@ -1,0 +1,146 @@
+buildscript {
+    ext {
+        springBootVersion = '4.1.1'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.gradle.wrapper'
+    id 'org.springframework.boot' version '4.1.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+
+group = 'com.alfet'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    mockitoAgent
+}
+
+repositories {
+    mavenCentral()
+    google()
+}
+
+dependencies {
+
+    // spring
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // google
+    implementation libs.bundles.google
+    // apache
+    implementation libs.bundles.apache
+
+    // lombok
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    annotationProcessor libs.lombok.mapstruct
+
+    // mapstruct
+    implementation libs.mapstruct
+    annotationProcessor libs.mapstruct.processor
+
+    // misc
+    implementation libs.jsoup
+    implementation libs.java.jwt
+
+    // tests
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testAnnotationProcessor libs.lombok
+    testAnnotationProcessor libs.mapstruct.processor
+
+    testImplementation libs.bundles.testing
+
+    mockitoAgent(libs.mockito) {
+        transitive = false
+    }
+}
+
+abstract class MockitoAgentProvider implements CommandLineArgumentProvider {
+    @InputFiles
+    @PathSensitive(PathSensitivity.RELATIVE)
+    abstract ConfigurableFileCollection getAgentJar()
+
+    @Override
+    Iterable<String> asArguments() {
+        ["-javaagent:${agentJar.asPath}"]
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "failed", "passed", "skipped", "standardError", "standardOut"
+    }
+
+    // Run tests in parallel (e.g., using 3 parallel worker processes)
+    maxParallelForks = 3
+
+    jvmArgumentProviders.add(objects.newInstance(MockitoAgentProvider).tap {
+        agentJar.from(configurations.mockitoAgent)
+    })
+}
+
+jacoco {
+    toolVersion = '0.8.15'
+}
+
+compileJava {
+    options.compilerArgs += "-Amapstruct.unmappedTargetPolicy=ERROR"
+}
+
+jacocoTestReport {
+    dependsOn test // Specifies that tests must run before generating the report
+    reports {
+        xml.required = true
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('reports/jacoco')
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'com/alfet/journalbot/JournalBotApp.*',
+                    'com/alfet/journalbot/config/GoogleApiConfig.*',
+                    'com/alfet/journalbot/config/SchedulerConfig.*',
+                    'com/alfet/journalbot/drive/FolderParams.*'
+            ])
+        }))
+    }
+}
+
+test {
+    finalizedBy jacocoTestReport // Report is always generated after tests run
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.80 // 100% coverage required
+            }
+        }
+    }
+}
+// Optional: Run verification automatically when running 'check'
+//check.dependsOn jacocoTestCoverageVerification

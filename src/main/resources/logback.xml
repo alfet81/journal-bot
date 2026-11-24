@@ -1,0 +1,33 @@
+<configuration>
+  <property resource="application.yml" />
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{MM/dd/yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <property name="LOG_DIR" value="log"/>
+  <property name="LOG_FILE" value="journal-bot.log"/>
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/${LOG_FILE}</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover -->
+      <fileNamePattern>${LOG_DIR}/${LOG_FILE}.%d.gz</fileNamePattern>
+      <!-- keep 30 days' worth of history capped at 3GB total size -->
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{MM/dd/yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.alfet" level="INFO" additivity="false">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE" />
+  </logger>
+  <root level="ERROR">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+
+</configuration>
