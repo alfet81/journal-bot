@@ -3,6 +3,7 @@ package com.alfet.journalbot.message.processor;
 import com.alfet.journalbot.atracker.message.processor.ATrackerEmailMessageProcessor;
 import com.alfet.journalbot.log.message.processor.LogEmailMessageProcessor;
 import com.alfet.journalbot.message.domain.EmailMessage;
+import com.alfet.journalbot.message.type.MessageType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +19,13 @@ public class EmailMessageProcessorImpl implements EmailMessageProcessor {
 
   @Override
   public void process(@NonNull EmailMessage emailMessage) {
-    switch (emailMessage.getType()) {
-      case LOG -> logEmailMessageProcessor.process(emailMessage);
-      case A_TRACKER -> atrackerEmailMessageProcessor.process(emailMessage);
-      default -> throw new IllegalStateException("Unrecognized or unsupported message type: "
-          + emailMessage.getType());
-    }
+    getEmailMessageProcessor(emailMessage.getType()).process(emailMessage);
+  }
+
+  private EmailMessageProcessor getEmailMessageProcessor(@NonNull MessageType messageType) {
+    return switch (messageType) {
+      case LOG -> logEmailMessageProcessor;
+      case A_TRACKER -> atrackerEmailMessageProcessor;
+    };
   }
 }

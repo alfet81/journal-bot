@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class EmailMessageProcessorImplTest {
@@ -54,6 +55,24 @@ class EmailMessageProcessorImplTest {
 
     // Then
     verify(logEmailMessageProcessor).process(emailMessage);
+    verify(atrackerEmailMessageProcessor, never()).process(any(EmailMessage.class));
+  }
+
+  @Test
+  void process_whenMessageTypeIsNull() {
+    // Given
+    var emailMessage = buildEmailMessage(MessageType.A_TRACKER);
+    ReflectionTestUtils.setField(emailMessage,  "type", null);
+
+    // When
+    var exception = catchException(() -> emailMessageProcessor.process(emailMessage));
+
+    // Then
+    assertThat(exception)
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("messageType is marked non-null but is null");
+
+    verify(logEmailMessageProcessor, never()).process(any(EmailMessage.class));
     verify(atrackerEmailMessageProcessor, never()).process(any(EmailMessage.class));
   }
 

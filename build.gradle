@@ -95,7 +95,7 @@ tasks.test {
     }
 
     // Run tests in parallel (e.g., using 3 parallel worker processes)
-    maxParallelForks = 3
+    maxParallelForks = 4
 
     jvmArgumentProviders.add(objects.newInstance(MockitoAgentProvider).tap {
         agentJar.from(configurations.mockitoAgent)

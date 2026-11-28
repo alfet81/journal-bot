@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component("atrackerEmailMessageProcessor")
 public class ATrackerEmailMessageProcessor extends AbstractEmailMessageProcessor {
 
-  private static final String SUBJECT_PREFIX = "Task Detail";
+  private static final String SUBJECT_PREFIX = "Task details";
   private static final String CSV_FILE_EXTENSION = ".csv";
 
   private final Function<CSVRecord, TaskDetails> taskDetailsFactory;
